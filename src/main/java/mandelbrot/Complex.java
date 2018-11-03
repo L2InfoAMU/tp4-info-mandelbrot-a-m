@@ -62,7 +62,7 @@ public class Complex {
      * @return a complex number, whose multiplication corresponds to a rotation by the given angle.
      */
     static Complex rotation(double radians) {
-        return new Complex(-Math.cos(radians), Math.sin(radians));
+        return new Complex(Math.cos(radians), Math.sin(radians));
     }
 
     /**
@@ -101,7 +101,7 @@ public class Complex {
      * @return A complex <code>c</code> such that <code>this * c = ||this|| ** 2</code>
      */
     Complex conjugate() {
-        return new Complex(-this.real, this.imaginary);
+        return new Complex(this.real, -this.imaginary);
     }
 
     /**
