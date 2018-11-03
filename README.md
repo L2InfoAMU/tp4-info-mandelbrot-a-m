@@ -7,5 +7,5 @@ Le but du TP sera de corriger le code de la classe `Complex` en s'aidant de test
 
 ## Membres du projet
 
-- NOM, prénom, numéro de groupe, du premier participant
+- THEVALIL SANJAY Yashovardhan
 - NOM, prénom, numéro de groupe, du deuxième participant
