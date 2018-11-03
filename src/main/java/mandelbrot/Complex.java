@@ -155,8 +155,7 @@ public class Complex {
         if (this.equals(ZERO)){
             throw new ArithmeticException("Divide by zero");
         }
-        double m = squaredModulus();
-        return new Complex(real / m, imaginary / m);
+        return new Complex(real / (Math.pow(real,2) + Math.pow(imaginary,2)), -imaginary / (Math.pow(real,2) + Math.pow(imaginary,2)));
     }
 
     /**
@@ -210,7 +209,7 @@ public class Complex {
         if (o == null || getClass() != o.getClass())
             return false;
         Complex complex = (Complex) o;
-        return Helpers.doubleCompare(complex.real, real) == 0 ||
+        return Helpers.doubleCompare(complex.real, real) == 0 &&
                 Helpers.doubleCompare(complex.imaginary, imaginary) == 0;
     }
 
