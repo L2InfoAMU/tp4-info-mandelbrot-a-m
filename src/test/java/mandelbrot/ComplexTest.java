@@ -16,7 +16,6 @@ public class ComplexTest {
     private final double real = -12;
     private final double imaginary = 10;
 
-
     @Test
     void testConstructor(){
         assertEquals(0., twoI.real, Helpers.EPSILON);
