@@ -125,6 +125,11 @@ public class ComplexTest {
     }
 
     @Test
+    void testScale() {
+        assertEquals(new Complex(3,12),new Complex(1,4).scale(3));
+    }
+
+    @Test
     void testDivideByZero(){
         assertThrows(ArithmeticException.class, ()->Complex.ONE.divide(Complex.ZERO));
     }
