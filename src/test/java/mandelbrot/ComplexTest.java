@@ -120,6 +120,11 @@ public class ComplexTest {
     }
 
     @Test
+    void testPow() {
+        assertEquals(onePlusI.multiply(onePlusI).multiply(onePlusI),onePlusI.pow(3));
+    }
+
+    @Test
     void testDivideByZero(){
         assertThrows(ArithmeticException.class, ()->Complex.ONE.divide(Complex.ZERO));
     }
