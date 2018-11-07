@@ -155,7 +155,8 @@ public class Complex {
         if (this.equals(ZERO)){
             throw new ArithmeticException("Divide by zero");
         }
-        return new Complex(real / (Math.pow(real,2) + Math.pow(imaginary,2)), -imaginary / (Math.pow(real,2) + Math.pow(imaginary,2)));
+        double squaredModulus = squaredModulus();
+        return new Complex(real / squaredModulus, -imaginary / squaredModulus);
     }
 
     /**
@@ -168,11 +169,12 @@ public class Complex {
         if (divisor.equals(ZERO)){
             throw new ArithmeticException("Divide by zero");
         }
-        double factor = 1 / (Math.pow(divisor.getReal(),2) + Math.pow(divisor.getImaginary(),2));
+        /*double factor = 1 / (Math.pow(divisor.getReal(),2) + Math.pow(divisor.getImaginary(),2));
         return new Complex(
                 factor * (real * divisor.getReal() + imaginary * divisor.getImaginary()),
                 factor * (imaginary * divisor.getReal() - real * divisor.getImaginary())
-        );
+        );*/
+        return this.multiply(divisor.reciprocal());
     }
 
 
