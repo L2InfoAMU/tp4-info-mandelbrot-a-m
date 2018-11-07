@@ -169,11 +169,6 @@ public class Complex {
         if (divisor.equals(ZERO)){
             throw new ArithmeticException("Divide by zero");
         }
-        /*double factor = 1 / (Math.pow(divisor.getReal(),2) + Math.pow(divisor.getImaginary(),2));
-        return new Complex(
-                factor * (real * divisor.getReal() + imaginary * divisor.getImaginary()),
-                factor * (imaginary * divisor.getReal() - real * divisor.getImaginary())
-        );*/
         return this.multiply(divisor.reciprocal());
     }
 
