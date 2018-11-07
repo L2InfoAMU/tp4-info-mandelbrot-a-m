@@ -17,6 +17,8 @@ import javafx.scene.paint.Color;
 import mandelbrot.Complex;
 import mandelbrot.Mandelbrot;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +70,6 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         generateUI();
-        //render();
     }
 
     private void generateUI() {
@@ -147,8 +148,6 @@ public class Controller implements Initializable {
                 e.printStackTrace();
             }
             render();
-            /*Thread generateMandelbrot = new Thread(this::render);
-            generateMandelbrot.start();*/
 
         });
         generate.getChildren().addAll(generateButton,progressIndicator);
@@ -163,14 +162,11 @@ public class Controller implements Initializable {
      * compute and display the image.
      */
     private void render() {
-        //List<Pixel> pixels = getPixels();
-        //Thread generateMandelbrot = new Thread(() -> pixels = getPixels());
         Thread generateMandelbrot = new Thread(() -> {
             pixels = getPixels();
             Platform.runLater(() -> renderPixels(pixels));
         });
         generateMandelbrot.start();
-        //renderPixels(pixels);
     }
 
     /**

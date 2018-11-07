@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ComplexTest {
+class ComplexTest {
     private final Complex onePlusI = new Complex(1,1);
     private final Complex minusI = new Complex(0,-1);
     private final Complex minusOne = new Complex(-1,0);
@@ -129,8 +129,17 @@ public class ComplexTest {
 
     @Test
     void testEquals() {
-        assertTrue(new Complex(3, 2).equals(new Complex(3, 2)));
-        assertFalse(new Complex(2,3).equals(new Complex(3,2)));
+        int x = 10;
+        int y = -15;
+        Complex p1 = new Complex(x,y);
+        Complex p2 = new Complex(x,y);
+        Complex p3 = new Complex(x, -y);
+        Complex p4 = new Complex(-x, y);
+        String s = "";
+        assertEquals(p1, p2);
+        assertNotEquals(p1, p3);
+        assertNotEquals(p2, p4);
+        assertNotEquals(p1, s);
     }
 
     @Test
