@@ -1,9 +1,18 @@
 package viewer;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import mandelbrot.Complex;
 import mandelbrot.Mandelbrot;
@@ -26,6 +35,10 @@ public class Controller implements Initializable {
 
     @FXML
     private Canvas canvas; /* The canvas to draw on */
+
+    @FXML
+    private StackPane stackPane;
+    private List<Pixel> pixels;
 
     private Camera camera = Camera.camera0; /* The view to display */
 
@@ -54,15 +67,110 @@ public class Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        render();
+        generateUI();
+        //render();
+    }
+
+    private void generateUI() {
+        VBox stackPaneVBox = new VBox();
+        stackPaneVBox.setPadding(new Insets(5,5,5,5));
+        stackPaneVBox.setSpacing(10);
+        HBox customColor = new HBox();
+        customColor.setPadding(new Insets(5,5,5,5));
+        customColor.setSpacing(10);
+        CheckBox customColorCheckBox = new CheckBox("Custom Color");
+        VBox colorsVBox = new VBox();
+        colorsVBox.setPadding(new Insets(5,5,5,5));
+        colorsVBox.setSpacing(10);
+
+        HBox hBox0 = new HBox();
+        final ColorPicker colorPicker0 = new ColorPicker();
+        colorPicker0.setValue(colors[0]);
+        colorPicker0.setDisable(true);
+        colorPicker0.setOnAction(event -> colors[0] = colorPicker0.getValue());
+        hBox0.getChildren().addAll(colorPicker0);
+
+        HBox hBox1 = new HBox();
+        final ColorPicker colorPicker1 = new ColorPicker();
+        colorPicker1.setValue(colors[1]);
+        colorPicker1.setDisable(true);
+        colorPicker0.setOnAction(event -> colors[1] = colorPicker1.getValue());
+        hBox1.getChildren().addAll(colorPicker1);
+
+        HBox hBox2 = new HBox();
+        final ColorPicker colorPicker2 = new ColorPicker();
+        colorPicker2.setValue(colors[2]);
+        colorPicker2.setDisable(true);
+        colorPicker2.setOnAction(event -> colors[2] = colorPicker2.getValue());
+        hBox2.getChildren().addAll(colorPicker2);
+
+        HBox hBox3 = new HBox();
+        final ColorPicker colorPicker3 = new ColorPicker();
+        colorPicker3.setValue(colors[3]);
+        colorPicker3.setDisable(true);
+        colorPicker3.setOnAction(event -> colors[3] = colorPicker3.getValue());
+        hBox3.getChildren().addAll(colorPicker3);
+
+        HBox hBox4 = new HBox();
+        final ColorPicker colorPicker4 = new ColorPicker();
+        colorPicker4.setValue(colors[4]);
+        colorPicker4.setDisable(true);
+        colorPicker4.setOnAction(event -> colors[4] = colorPicker4.getValue());
+        hBox4.getChildren().addAll(colorPicker4);
+
+        HBox hBox5 = new HBox();
+        final ColorPicker colorPicker5 = new ColorPicker();
+        colorPicker5.setValue(colors[5]);
+        colorPicker5.setDisable(true);
+        colorPicker5.setOnAction(event -> colors[5] = colorPicker5.getValue());
+        hBox5.getChildren().addAll(colorPicker5);
+
+        customColorCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            colorPicker0.setDisable(!colorPicker0.isDisable());
+            colorPicker1.setDisable(!colorPicker1.isDisable());
+            colorPicker2.setDisable(!colorPicker2.isDisable());
+            colorPicker3.setDisable(!colorPicker3.isDisable());
+            colorPicker4.setDisable(!colorPicker4.isDisable());
+            colorPicker5.setDisable(!colorPicker5.isDisable());
+        });
+
+        HBox generate = new HBox();
+        Button generateButton = new Button("Generate !");
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setVisible(false);
+        generateButton.setOnAction(event -> {
+            canvas.setVisible(true);
+            progressIndicator.setVisible(true);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            render();
+            /*Thread generateMandelbrot = new Thread(this::render);
+            generateMandelbrot.start();*/
+
+        });
+        generate.getChildren().addAll(generateButton,progressIndicator);
+
+        colorsVBox.getChildren().addAll(hBox0,hBox1,hBox2,hBox3,hBox4,hBox5);
+        customColor.getChildren().addAll(customColorCheckBox,colorsVBox);
+        stackPaneVBox.getChildren().addAll(customColor, generate);
+        stackPane.getChildren().addAll(stackPaneVBox);
     }
 
     /**
      * compute and display the image.
      */
     private void render() {
-        List<Pixel> pixels = getPixels();
-        renderPixels(pixels);
+        //List<Pixel> pixels = getPixels();
+        //Thread generateMandelbrot = new Thread(() -> pixels = getPixels());
+        Thread generateMandelbrot = new Thread(() -> {
+            pixels = getPixels();
+            Platform.runLater(() -> renderPixels(pixels));
+        });
+        generateMandelbrot.start();
+        //renderPixels(pixels);
     }
 
     /**
