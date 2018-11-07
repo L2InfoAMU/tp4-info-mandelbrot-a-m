@@ -166,9 +166,7 @@ public class Complex {
      * @return the complex number <code>this / divisor</code>
      */
     Complex divide(Complex divisor) {
-        if (divisor.equals(ZERO)){
-            throw new ArithmeticException("Divide by zero");
-        }
+        if (divisor.equals(ZERO)) throw new ArithmeticException("Divide by zero");
         return this.multiply(divisor.reciprocal());
     }
 
