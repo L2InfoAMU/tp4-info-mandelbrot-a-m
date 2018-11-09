@@ -6,10 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -17,8 +14,6 @@ import javafx.scene.paint.Color;
 import mandelbrot.Complex;
 import mandelbrot.Mandelbrot;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +71,57 @@ public class Controller implements Initializable {
         VBox stackPaneVBox = new VBox();
         stackPaneVBox.setPadding(new Insets(5,5,5,5));
         stackPaneVBox.setSpacing(10);
+        // Code for Area Selection GUI
+        HBox areaSelection = new HBox();
+        areaSelection.setPadding(new Insets(5,5,5,5));
+        areaSelection.setSpacing(10);
+
+        CheckBox areaSelectionCheckBox = new CheckBox("Area Selection");
+
+        areaSelection.setPadding(new Insets(5,5,5,5));
+        areaSelection.setSpacing(10);
+
+        HBox pixelCenter = new HBox();
+        Label pixelImageCenter = new Label("Image Center : ");
+        Label pixelImageCenterX = new Label("Center X : ");
+        TextField pixelImageCenterXValue = new TextField();
+        pixelImageCenterXValue.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                pixelImageCenterXValue.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+        Label pixelImageCenterY = new Label(" Center Y : ");
+        TextField pixelImageCenterYValue = new TextField();
+        pixelImageCenterYValue.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                pixelImageCenterYValue.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+        pixelCenter.getChildren().addAll(pixelImageCenter,pixelImageCenterX,pixelImageCenterXValue,pixelImageCenterY,pixelImageCenterYValue);
+
+        HBox imageSize = new HBox();
+        Label imageWidth = new Label("Image Size : ");
+        Label imageWidthX = new Label("Width : ");
+        TextField imageWidthValueX = new TextField();
+        imageWidthValueX.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                imageWidthValueX.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+        Label imageHeigth = new Label("Height : ");
+        TextField imageHeightValueY = new TextField();
+        imageHeightValueY.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                imageHeightValueY.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+        imageSize.getChildren().addAll(imageWidth,imageWidthX,imageWidthValueX,imageHeigth,imageHeightValueY);
+        areaSelection.getChildren().addAll(pixelCenter,imageSize);
+        areaSelection.setDisable(true);
+
+        areaSelectionCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> areaSelection.setDisable(!areaSelection.isDisable()));
+
+        // Code for Custom Colors GUI
         HBox customColor = new HBox();
         customColor.setPadding(new Insets(5,5,5,5));
         customColor.setSpacing(10);
@@ -142,6 +188,12 @@ public class Controller implements Initializable {
         generateButton.setOnAction(event -> {
             canvas.setVisible(true);
             progressIndicator.setVisible(true);
+            if (areaSelectionCheckBox.isSelected()) {
+                camera = new Camera(Double.parseDouble(pixelImageCenterXValue.getCharacters().toString()),
+                        Double.parseDouble(pixelImageCenterYValue.getCharacters().toString()),
+                        Double.parseDouble(imageWidthValueX.getCharacters().toString()),
+                        Double.parseDouble(imageWidthValueX.getCharacters().toString()) / Double.parseDouble(imageHeightValueY.getCharacters().toString()));
+            }
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -154,7 +206,7 @@ public class Controller implements Initializable {
 
         colorsVBox.getChildren().addAll(hBox0,hBox1,hBox2,hBox3,hBox4,hBox5);
         customColor.getChildren().addAll(customColorCheckBox,colorsVBox);
-        stackPaneVBox.getChildren().addAll(customColor, generate);
+        stackPaneVBox.getChildren().addAll(areaSelectionCheckBox, areaSelection, customColor, generate);
         stackPane.getChildren().addAll(stackPaneVBox);
     }
 
