@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 import mandelbrot.Complex;
 import mandelbrot.Mandelbrot;
 
@@ -18,6 +19,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 /**
  * Controls the color of the pixels of the canvas.
@@ -67,7 +70,42 @@ public class Controller implements Initializable {
         generateUI();
     }
 
+    private TextFormatter<Double> formatTextField() {
+
+        Pattern validEditingState = Pattern.compile("-?(([1-9][0-9]*)|0)?(\\.[0-9]*)?");
+
+        UnaryOperator<TextFormatter.Change> filter = c -> {
+            String text = c.getControlNewText();
+            if (validEditingState.matcher(text).matches()) {
+                return c ;
+            } else {
+                return null ;
+            }
+        };
+
+        StringConverter<Double> converter = new StringConverter<>() {
+
+            @Override
+            public Double fromString(String s) {
+                if (s.isEmpty() || "-".equals(s) || ".".equals(s) || "-.".equals(s)) {
+                    return 0.0 ;
+                } else {
+                    return Double.valueOf(s);
+                }
+            }
+
+
+            @Override
+            public String toString(Double d) {
+                return d.toString();
+            }
+        };
+
+        return new TextFormatter<>(converter, 0.0, filter);
+    }
+
     private void generateUI() {
+
         VBox stackPaneVBox = new VBox();
         stackPaneVBox.setPadding(new Insets(5,5,5,5));
         stackPaneVBox.setSpacing(10);
@@ -85,36 +123,23 @@ public class Controller implements Initializable {
         Label pixelImageCenter = new Label("Image Center : ");
         Label pixelImageCenterX = new Label("Center X : ");
         TextField pixelImageCenterXValue = new TextField();
-        pixelImageCenterXValue.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                pixelImageCenterXValue.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+        pixelImageCenterXValue.setTextFormatter(formatTextField());
+
         Label pixelImageCenterY = new Label(" Center Y : ");
         TextField pixelImageCenterYValue = new TextField();
-        pixelImageCenterYValue.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                pixelImageCenterYValue.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+        pixelImageCenterYValue.setTextFormatter(formatTextField());
         pixelCenter.getChildren().addAll(pixelImageCenter,pixelImageCenterX,pixelImageCenterXValue,pixelImageCenterY,pixelImageCenterYValue);
 
         HBox imageSize = new HBox();
         Label imageWidth = new Label("Image Size : ");
         Label imageWidthX = new Label("Width : ");
         TextField imageWidthValueX = new TextField();
-        imageWidthValueX.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                imageWidthValueX.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+        imageWidthValueX.setTextFormatter(formatTextField());
+
         Label imageHeigth = new Label("Height : ");
         TextField imageHeightValueY = new TextField();
-        imageHeightValueY.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                imageHeightValueY.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+        imageHeightValueY.setTextFormatter(formatTextField());
+
         imageSize.getChildren().addAll(imageWidth,imageWidthX,imageWidthValueX,imageHeigth,imageHeightValueY);
         areaSelection.getChildren().addAll(pixelCenter,imageSize);
         areaSelection.setDisable(true);
