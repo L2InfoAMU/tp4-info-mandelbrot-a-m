@@ -109,6 +109,7 @@ public class Controller implements Initializable {
         VBox stackPaneVBox = new VBox();
         stackPaneVBox.setPadding(new Insets(5,5,5,5));
         stackPaneVBox.setSpacing(10);
+
         // Code for Area Selection GUI
         HBox areaSelection = new HBox();
         areaSelection.setPadding(new Insets(5,5,5,5));
